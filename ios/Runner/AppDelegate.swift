@@ -18,10 +18,13 @@ import Flutter
                switch call.method {
                // 3
                case "checkInfoDevice":
-                   let a = call.arguments;
+                   let data = call.arguments as? Dictionary<String, Any>;
                    
-                   let bundleId = Bundle.main.infoDictionary?["CFBundleIdentifier"]
-                   result(bundleId)
+                   let value = data?["code"] as? String;
+                   if(value == "0"){
+                       result("Welcome from IOS");
+                   }
+         
                default:
                    // 4
                    result(FlutterMethodNotImplemented)
