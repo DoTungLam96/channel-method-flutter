@@ -76,6 +76,17 @@ class _MyHomePageState extends State<MyHomePage> {
           const SizedBox(
             height: 8,
           ),
+          StreamBuilder(
+            stream: serviceLocator.get<PlatformNativeDemo>().getSensorValue(),
+            builder: (context, snapshot) {
+              return Text(
+                'Sensor: ${snapshot.data}',
+              );
+            },
+          ),
+          const SizedBox(
+            height: 8,
+          ),
           InkWell(
             onTap: () async {
               // Navigator.push(context,

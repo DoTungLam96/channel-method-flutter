@@ -11,10 +11,14 @@ abstract class PlatformDemoPlugin extends PlatformInterface {
 
   static PlatformDemoPlugin get instance => _instance;
 
+  
+
   static set instance(PlatformDemoPlugin instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
 
   Future<String> checkInforDevice();
+
+    Stream<double> getSensorStream();
 }

@@ -4,4 +4,8 @@ class PlatformNativeDemo {
   Future<String> checkInforDevice() {
     return PlatformDemoPlugin.instance.checkInforDevice();
   }
+
+  Stream<double> getSensorValue() {
+    return PlatformDemoPlugin.instance.getSensorStream();
+  }
 }

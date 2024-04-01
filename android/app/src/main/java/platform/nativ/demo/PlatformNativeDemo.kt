@@ -1,18 +1,31 @@
 package platform.nativ.demo
 import android.content.Context
-import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-class PlatformNativeDemo: FlutterPlugin, MethodCallHandler {
+
+class PlatformNativeDemo: FlutterPlugin, MethodCallHandler{
 
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
+    private lateinit var  readingStream : BarometerReadingStream;
+
+    private lateinit var eventChannel: EventChannel
+
+
+
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "platform_native_demo")
         channel.setMethodCallHandler(this)
+        eventChannel = EventChannel(flutterPluginBinding.binaryMessenger, "eventChannelStream")
+        readingStream = BarometerReadingStream()
+        eventChannel.setStreamHandler(readingStream)
+
+        context = flutterPluginBinding.applicationContext
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -25,9 +38,17 @@ class PlatformNativeDemo: FlutterPlugin, MethodCallHandler {
 
         when (call.method) {
             "checkInfoDevice" -> checkInfoDevice(result, arguments)
+            "sensorEvent" -> sensorEvent(result, arguments)
 
             else -> result.notImplemented()
         }
+    }
+
+    fun sensorEvent(result: Result, args : Map<String, Any>?){
+        readingStream.init(this.context);
+
+        result.success(true)
+        return
     }
 
     fun checkInfoDevice(result: Result, args : Map<String, Any>?) {
@@ -55,7 +76,6 @@ class PlatformNativeDemo: FlutterPlugin, MethodCallHandler {
     private fun illegalArguments(result: Result) {
         result.error("999", "Illegal arguments", null)
     }
-
 
 
 
