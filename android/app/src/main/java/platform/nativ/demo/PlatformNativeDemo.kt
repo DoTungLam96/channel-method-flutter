@@ -1,12 +1,15 @@
 package platform.nativ.demo
+
 import android.content.Context
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
-import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import org.json.JSONException
+import org.json.JSONObject
+
 
 class PlatformNativeDemo: FlutterPlugin, MethodCallHandler{
 
@@ -61,10 +64,12 @@ class PlatformNativeDemo: FlutterPlugin, MethodCallHandler{
                     illegalArguments(result)
                     return
                 }
-
+                 
 
                 if (currentCode == "0") {
-                    result.success("Success roi nhe !")
+                   val user = User("Lam Do", 1996);
+  
+                    result.success(user.toJSON())
                 } else {
                     result.error("-1", "Error", null)
                 }
@@ -79,4 +84,21 @@ class PlatformNativeDemo: FlutterPlugin, MethodCallHandler{
 
 
 
+
+
+}
+
+class User(val nickName: String, val id: Int){
+    fun toJSON(): String {
+        val jsonObject = JSONObject()
+        return try {
+            jsonObject.put("nickName", nickName)
+            jsonObject.put("id", id)
+            jsonObject.toString()
+        } catch (e: JSONException) {
+            // TODO Auto-generated catch block
+            e.printStackTrace()
+            ""
+        }
+    }
 }

@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
+import 'package:flutter_channel_platform/model/user.dart';
 import 'package:flutter_channel_platform/platform/platform_interface_demo.dart';
 
 class MethodChannelDemo extends PlatformDemoPlugin {
@@ -7,19 +10,23 @@ class MethodChannelDemo extends PlatformDemoPlugin {
   final _eventChannel = const EventChannel('eventChannelStream');
 
   @override
-  Future<String> checkInforDevice() async {
-    final result =
-        await methodChannel.invokeMethod('checkInfoDevice', {'code': "0"});
+  Future<User?> checkInforDevice() async {
+    try {
+      final result =
+          await methodChannel.invokeMethod('checkInfoDevice', {'code': "0"});
+      final user = User.fromJson(jsonDecode(result));
 
-    return '$result';
+      return user;
+    } catch (_) {
+      return null;
+    }
   }
 
   @override
   Stream<double> getSensorStream() {
     methodChannel.invokeListMethod('sensorEvent');
     return _eventChannel.receiveBroadcastStream().map<double>((event) {
-      var a = event;
-      return a;
+      return event;
     });
   }
 }
